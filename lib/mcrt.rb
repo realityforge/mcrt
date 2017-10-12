@@ -62,6 +62,13 @@ class MavenCentralPublishTool
                  JSON.pretty_generate('data' => { 'description' => description, 'stagedRepositoryIds' => [repository_id] }))
   end
 
+  def promote_repository(repository_id, description)
+    post_request('https://oss.sonatype.org/service/local/staging/bulk/promote',
+                 JSON.pretty_generate('data' => { 'autoDropAfterRelease' => true,
+                                                  'description' => description,
+                                                  'stagedRepositoryIds' => [repository_id] }))
+  end
+
   def drop_repository(repository_id, description)
     post_request('https://oss.sonatype.org/service/local/staging/bulk/drop',
                  JSON.pretty_generate('data' => { 'description' => description, 'stagedRepositoryIds' => [repository_id] }))
@@ -81,9 +88,7 @@ class MavenCentralPublishTool
         raise 'Failed to close repository. It is likely that the release does not conform to Maven Central release requirements. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories and manually complete the release.'
       end
       begin
-        #TODO: Implement the next method
         promote_repository(candidate['repositoryId'], "Promoting repository for #{project.name}")
-        drop_repository(candidate['repositoryId'], "Dropping repository for #{project.name}")
       rescue
         raise 'Failed to promote repository. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories and manually complete the release.'
       end
