@@ -84,12 +84,16 @@ class MavenCentralPublishTool
       candidate = candidates[0]
       begin
         close_repository(candidate['repositoryId'], "Closing repository for #{project.name}")
-      rescue
+      rescue Exception => e
+        puts "#{e.class.name}: #{e.message}"
+        puts e.backtrace.join("\n")
         raise 'Failed to close repository. It is likely that the release does not conform to Maven Central release requirements. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories and manually complete the release.'
       end
       begin
         promote_repository(candidate['repositoryId'], "Promoting repository for #{project.name}")
-      rescue
+      rescue Exception => e
+        puts "#{e.class.name}: #{e.message}"
+        puts e.backtrace.join("\n")
         raise 'Failed to promote repository. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories and manually complete the release.'
       end
     end
