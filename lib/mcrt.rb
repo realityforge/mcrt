@@ -46,14 +46,14 @@ class MavenCentralPublishTool
     @user_agent || "Ruby-#{RUBY_VERSION}"
   end
 
-  def get_staging_repositories(profile_name)
+  def get_staging_repositories(profile_name, ignore_transitioning_repositories = true)
     result = get_request('https://oss.sonatype.org/service/local/staging/profile_repositories')
     result = JSON.parse(result)
     result['data'].select do |repo|
       repo['profileName'] == profile_name &&
         repo['userId'] == self.username &&
         repo['userAgent'] == self.user_agent &&
-        repo['description'] == 'Implicitly created (auto staging).'
+        (!ignore_transitioning_repositories || !repo['transitioning'])
     end
   end
 
@@ -101,6 +101,15 @@ class MavenCentralPublishTool
         puts "#{e.class.name}: #{e.message}"
         puts e.backtrace.join("\n")
         raise 'Failed to promote repository. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories and manually complete the release.'
+      end
+      repositories = get_staging_repositories(profile_name, false)
+      while repositories.size == 1
+        puts "Waiting for repository to be promoted..."
+        sleep 1
+        if repositories[0][:notifications] != 0
+          raise 'Failed to promote repository. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories and manually complete the release.'
+        end
+        repositories = get_staging_repositories(profile_name, false)
       end
     end
   end
