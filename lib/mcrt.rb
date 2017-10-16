@@ -90,6 +90,10 @@ class MavenCentralPublishTool
         puts e.backtrace.join("\n")
         raise 'Failed to close repository. It is likely that the release does not conform to Maven Central release requirements. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories and manually complete the release.'
       end
+      while get_staging_repositories(profile_name).size == 0
+        puts 'Waiting for repository to close...'
+        sleep 1
+      end
       puts "Requesting promotion of staging repository #{profile_name}:#{candidate['repositoryId']}"
       begin
         promote_repository(candidate['repositoryId'], "Promoting repository for #{profile_name}")
