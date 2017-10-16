@@ -82,6 +82,7 @@ class MavenCentralPublishTool
       raise 'Release process found multiple staging repositories that could be the release just uploaded. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories and manually complete the release.'
     else
       candidate = candidates[0]
+      puts "Requesting close of staging repository #{profile_name}:#{candidate['repositoryId']}"
       begin
         close_repository(candidate['repositoryId'], "Closing repository for #{profile_name}")
       rescue Exception => e
@@ -89,6 +90,7 @@ class MavenCentralPublishTool
         puts e.backtrace.join("\n")
         raise 'Failed to close repository. It is likely that the release does not conform to Maven Central release requirements. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories and manually complete the release.'
       end
+      puts "Requesting promotion of staging repository #{profile_name}:#{candidate['repositoryId']}"
       begin
         promote_repository(candidate['repositoryId'], "Promoting repository for #{profile_name}")
       rescue Exception => e
