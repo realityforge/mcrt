@@ -104,7 +104,7 @@ class MavenCentralPublishTool
       end
       repositories = get_staging_repositories(profile_name, false)
       while repositories.size == 1
-        puts "Waiting for repository to be promoted..."
+        puts 'Waiting for repository to be promoted...'
         sleep 1
         if repositories[0][:notifications] != 0
           raise 'Failed to promote repository. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories and manually complete the release.'
