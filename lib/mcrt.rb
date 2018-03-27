@@ -53,8 +53,19 @@ class MavenCentralPublishTool
       repo['profileName'] == profile_name &&
         repo['userId'] == self.username &&
         repo['userAgent'] == self.user_agent &&
-        (!ignore_transitioning_repositories || !repo['transitioning'])
+        (!ignore_transitioning_repositories || !repo['transitioning']) &&
+        get_my_ip_addresses.any?{|a| a == repo['ipAddress']}
     end
+  end
+
+  def get_my_ip_addresses
+    addresses = Socket.ip_address_list.collect{|a| a.ip_address.to_s }
+    begin
+      addresses << Net::HTTP.get(URI('http://www.myexternalip.com/raw')).strip
+    rescue Error
+      # ignored
+    end
+    addresses
   end
 
   def close_repository(repository_id, description)
