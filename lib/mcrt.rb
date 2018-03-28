@@ -12,17 +12,17 @@ class MavenCentralReleaseTool
         profile_name = options[:profile_name] || (raise ':profile_name not specified when defining tasks')
         username = options[:username] || (raise ':username name not specified when defining tasks')
         password = options[:password] || ENV['MAVEN_CENTRAL_PASSWORD'] || (raise "Unable to locate environment variable with name 'MAVEN_CENTRAL_PASSWORD'")
-        MavenCentralPublishTool.buildr_release(project, profile_name, username, password)
+        MavenCentralReleaseTool.buildr_release(project, profile_name, username, password)
       end
 
       desc 'Publish release to maven central iff current HEAD is a tag'
       task 'mcrt:publish_if_tagged' do
-        tag = MavenCentralPublishTool.get_head_tag_if_any
+        tag = MavenCentralReleaseTool.get_head_tag_if_any
         if tag.nil?
           puts 'Current HEAD is not a tag. Skipping publish step.'
         else
           puts "Current HEAD is a tag: #{tag}"
-          if MavenCentralPublishTool.is_tag_on_candidate_branches?(tag, candidate_branches)
+          if MavenCentralReleaseTool.is_tag_on_candidate_branches?(tag, candidate_branches)
             task('mcrt:publish').invoke
           end
         end
@@ -72,7 +72,7 @@ class MavenCentralReleaseTool
 
         project.task(':upload').invoke
 
-        r = MavenCentralPublishTool.new
+        r = MavenCentralReleaseTool.new
         r.username = username
         r.password = password
         r.user_agent = "Buildr-#{Buildr::VERSION}"
