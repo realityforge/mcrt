@@ -6,6 +6,7 @@ require 'json'
 class MavenCentralReleaseTool
   class << self
     def define_publish_tasks(options = {})
+      candidate_branches = options[:branches] || %w(master)
       desc 'Publish release on maven central'
       task 'mcrt:publish' do
         project = options[:project] || Buildr.projects[0].root_project
