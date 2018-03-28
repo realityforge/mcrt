@@ -3,7 +3,7 @@ require 'net/https'
 require 'uri'
 require 'json'
 
-class MavenCentralPublishTool
+class MavenCentralReleaseTool
   class << self
     def define_publish_tasks(options = {})
       desc 'Publish release on maven central'
