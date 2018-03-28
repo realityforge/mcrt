@@ -4,27 +4,30 @@ require 'uri'
 require 'json'
 
 class MavenCentralPublishTool
-  def self.buildr_release(project, profile_name, username, password)
-    release_to_url = Buildr.repositories.release_to[:url]
-    release_to_username = Buildr.repositories.release_to[:username]
-    release_to_password = Buildr.repositories.release_to[:password]
+  class << self
 
-    begin
-      Buildr.repositories.release_to[:url] = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
-      Buildr.repositories.release_to[:username] = username
-      Buildr.repositories.release_to[:password] = password
+    def buildr_release(project, profile_name, username, password)
+      release_to_url = Buildr.repositories.release_to[:url]
+      release_to_username = Buildr.repositories.release_to[:username]
+      release_to_password = Buildr.repositories.release_to[:password]
 
-      project.task(':upload').invoke
+      begin
+        Buildr.repositories.release_to[:url] = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+        Buildr.repositories.release_to[:username] = username
+        Buildr.repositories.release_to[:password] = password
 
-      r = MavenCentralPublishTool.new
-      r.username = username
-      r.password = password
-      r.user_agent = "Buildr-#{Buildr::VERSION}"
-      r.release_sole_auto_staging(profile_name)
-    ensure
-      Buildr.repositories.release_to[:url] = release_to_url
-      Buildr.repositories.release_to[:username] = release_to_username
-      Buildr.repositories.release_to[:password] = release_to_password
+        project.task(':upload').invoke
+
+        r = MavenCentralPublishTool.new
+        r.username = username
+        r.password = password
+        r.user_agent = "Buildr-#{Buildr::VERSION}"
+        r.release_sole_auto_staging(profile_name)
+      ensure
+        Buildr.repositories.release_to[:url] = release_to_url
+        Buildr.repositories.release_to[:username] = release_to_username
+        Buildr.repositories.release_to[:password] = release_to_password
+      end
     end
   end
 
