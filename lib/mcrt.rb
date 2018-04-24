@@ -71,12 +71,20 @@ class MavenCentralReleaseTool
         Buildr.repositories.release_to[:username] = username
         Buildr.repositories.release_to[:password] = password
 
-        project.task(':upload').invoke
+        project.task(':package').invoke
 
         r = MavenCentralReleaseTool.new
         r.username = username
         r.password = password
         r.user_agent = "Buildr-#{Buildr::VERSION}"
+        while r.get_staging_repositories(profile_name, false).size != 0
+          puts 'Another project currently staging. Waiting for other repository co complete. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories to view the other staging attempts.'
+          sleep 1
+        end
+        puts "Beginning upload to staging repository #{profile_name}"
+
+        project.task(':upload').invoke
+
         r.release_sole_auto_staging(profile_name)
       ensure
         Buildr.repositories.release_to[:url] = release_to_url
