@@ -128,7 +128,7 @@ class MavenCentralReleaseTool
     addresses = Socket.ip_address_list.collect {|a| a.ip_address.to_s}
     begin
       addresses << Net::HTTP.get(URI('http://www.myexternalip.com/raw')).strip
-    rescue Error
+    rescue Exception
       # ignored
     end
     addresses
