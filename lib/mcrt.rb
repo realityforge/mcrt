@@ -78,7 +78,7 @@ class MavenCentralReleaseTool
         r.password = password
         r.user_agent = "Buildr-#{Buildr::VERSION}"
         while r.get_staging_repositories(profile_name, false).size != 0
-          puts 'Another project currently staging. Waiting for other repository co complete. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories to view the other staging attempts.'
+          puts 'Another project currently staging. Waiting for other repository to complete. Please visit the website https://oss.sonatype.org/index.html#stagingRepositories to view the other staging attempts.'
           sleep 1
         end
         puts "Beginning upload to staging repository #{profile_name}"
