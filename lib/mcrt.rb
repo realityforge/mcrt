@@ -127,7 +127,7 @@ class MavenCentralReleaseTool
   def get_my_ip_addresses
     addresses = Socket.ip_address_list.collect {|a| a.ip_address.to_s}
     begin
-      addresses << Net::HTTP.get(URI('http://www.myexternalip.com/raw')).strip
+      addresses << `dig +short myip.opendns.com @resolver1.opendns.com`.strip
     rescue Exception
       # ignored
     end
