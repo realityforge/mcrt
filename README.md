@@ -1,6 +1,6 @@
 # Maven Central Release Tool
 
-[![Build Status](https://secure.travis-ci.org/realityforge/mcrt.png?branch=master)](http://travis-ci.org/realityforge/mcrt)
+[![Build Status](https://secure.travis-ci.org/realityforge/mcrt.svg?branch=master)](http://travis-ci.org/realityforge/mcrt)
 
 This is very simply tool that allows you to close, promote and drop and staging repository in Maven Central.
 The library assumes some other tool will upload the artifacts to the staging repository. This tool can then
