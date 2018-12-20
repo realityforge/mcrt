@@ -131,7 +131,7 @@ class MavenCentralReleaseTool
     rescue Exception
       # ignored
     end
-    addresses
+    addresses.sort.uniq
   end
 
   def close_repository(repository_id, description)
