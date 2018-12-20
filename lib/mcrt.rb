@@ -131,6 +131,16 @@ class MavenCentralReleaseTool
     rescue Exception
       # ignored
     end
+    begin
+      addresses << Net::HTTP.get(URI('http://www.myexternalip.com/raw')).strip
+    rescue Exception
+      # ignored
+    end
+    begin
+      addresses << Net::HTTP.get(URI('https://diagnostic.opendns.com/myip')).strip
+    rescue Exception
+      # ignored
+    end
     addresses.sort.uniq
   end
 
