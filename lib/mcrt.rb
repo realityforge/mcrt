@@ -141,6 +141,11 @@ class MavenCentralReleaseTool
     rescue Exception
       # ignored
     end
+    begin
+      addresses << JSON.parse(Net::HTTP.get(URI('https://api.ipify.org?format=json')))['ip']
+    rescue Exception
+      # ignored
+    end
     addresses.sort.uniq
   end
 
